@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	fmt.Println("*** Payu Go Clint v0.4.2")
+	fmt.Println("*** Payu Go Clint v0.4.3")
 }
 
 func TestPaymentThreeD(t *testing.T) {
