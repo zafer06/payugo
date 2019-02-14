@@ -7,3 +7,7 @@ Payu ödeme sistemi için Go kütüphanesi
 ## Kurulum (Installation)
 
     $ go get -u github.com/zafer06/payugo
+
+## License
+
+    MIT
