@@ -3,12 +3,47 @@ package payugo
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 	"testing"
 	"time"
+	"unicode/utf8"
 )
 
 func init() {
 	fmt.Println("*** Payu Go Clint v0.4.3")
+}
+
+func TestPayuIPN(t *testing.T) {
+	var o = Options{
+		URL:      "",
+		Merchant: "PALJZXGV",
+		Secret:   "f*%J7z6_#|5]s7V4[g3]",
+	}
+
+	var date = time.Now().UTC().Format("2006-01-02 15:04:05")
+
+	var array = map[string]string{
+		"IpnPid":   "109652057",
+		"IpnPname": "Lancome La Vie Est Belle Edp 100 Ml Kadın Parfümü",
+		"IpnDate":  "20190220161357",
+		"date":     date,
+	}
+
+	var hashString string
+	hashString += strconv.Itoa(utf8.RuneCountInString(array["IpnPid"])) + array["IpnPid"]
+	hashString += strconv.Itoa(utf8.RuneCountInString(array["IpnPname"])) + array["IpnPname"]
+	hashString += strconv.Itoa(utf8.RuneCountInString(array["IpnDate"])) + array["IpnDate"]
+	hashString += strconv.Itoa(utf8.RuneCountInString(array["date"])) + array["date"]
+
+	var signature = signatureCalculate(o.Secret, hashString)
+
+	var test = fmt.Sprintf("<EPAYMENT>%s|%s</EPAYMENT>", date, signature)
+
+	var result = PayuIPN(o, array)
+
+	if result != test {
+		t.Errorf("PaymentThreeD testinde hata -> beklenen: %s, bulunan: %s", test, result)
+	}
 }
 
 func TestPaymentThreeD(t *testing.T) {

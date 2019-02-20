@@ -17,6 +17,20 @@ import (
 	"unicode/utf8"
 )
 
+// PayuIPN function
+func PayuIPN(o Options, array map[string]string) string {
+	var hashString string
+	hashString += strconv.Itoa(utf8.RuneCountInString(array["IpnPid"])) + array["IpnPid"]
+	hashString += strconv.Itoa(utf8.RuneCountInString(array["IpnPname"])) + array["IpnPname"]
+	hashString += strconv.Itoa(utf8.RuneCountInString(array["IpnDate"])) + array["IpnDate"]
+	hashString += strconv.Itoa(utf8.RuneCountInString(array["date"])) + array["date"]
+
+	var signature = signatureCalculate(o.Secret, hashString)
+	fmt.Println("--> Sign: ", signature)
+
+	return fmt.Sprintf("<EPAYMENT>%s|%s</EPAYMENT>", array["date"], signature)
+}
+
 // Payment function
 func Payment(o Options, request map[string]string) PaymentRes {
 	var hashString string
