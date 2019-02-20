@@ -26,7 +26,6 @@ func PayuIPN(o Options, array map[string]string) string {
 	hashString += strconv.Itoa(utf8.RuneCountInString(array["date"])) + array["date"]
 
 	var signature = signatureCalculate(o.Secret, hashString)
-	fmt.Println("--> Sign: ", signature)
 
 	return fmt.Sprintf("<EPAYMENT>%s|%s</EPAYMENT>", array["date"], signature)
 }
