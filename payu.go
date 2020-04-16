@@ -31,7 +31,7 @@ func PayuIPN(o Options, array map[string]string) string {
 }
 
 // Payment function
-func Payment(o Options, request map[string]string) PaymentRes {
+func Payment(o Options, request map[string]string) (PaymentRes, error) {
 	var hashString string
 	for _, v := range sortParamList(request) {
 		hashString += strconv.Itoa(utf8.RuneCountInString(v)) + v
@@ -48,9 +48,9 @@ func Payment(o Options, request map[string]string) PaymentRes {
 	var result = connect("POST", o.URL, v.Encode())
 
 	var payment PaymentRes
-	params, _ := payment.Parse(result)
+	params, err := payment.Parse(result)
 
-	return params
+	return params, err
 }
 
 // BinNumber function
